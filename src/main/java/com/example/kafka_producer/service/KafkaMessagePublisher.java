@@ -1,0 +1,40 @@
+package com.example.kafka_producer.service;
+
+import com.example.kafka_producer.dto.Customer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
+import org.springframework.stereotype.Service;
+
+import java.util.concurrent.CompletableFuture;
+
+@Service
+public class KafkaMessagePublisher {
+
+    @Autowired
+    private KafkaTemplate<String, Object> template;
+
+    public void sendMessageToConsumer(String message) {
+       /* CompletableFuture<SendResult<String, Object>> future = template.send("kafka-topic",message);
+
+        future.whenComplete((result, ex) -> {
+            if (ex == null) {
+                System.out.println("Send message [" + message + "] with offset[ " + result.getRecordMetadata().offset());
+            } else {
+                System.out.println("Unable send message " + ex.getMessage());
+            }
+        });*/
+    }
+
+    public void sendEventToConsumer(Customer customer) {
+        CompletableFuture<SendResult<String, Object>> future = template.send("kafka-topic",customer);
+
+        future.whenComplete((result, ex) -> {
+            if (ex == null) {
+                System.out.println("Send message [" + customer + "] with offset[ " + result.getRecordMetadata().offset());
+            } else {
+                System.out.println("Unable send message " + ex.getMessage());
+            }
+        });
+    }
+}
